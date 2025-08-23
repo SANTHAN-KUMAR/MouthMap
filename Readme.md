@@ -1,258 +1,135 @@
-# MouthMap: Lip Reading with Deep Learning
-
 <div align="center">
-  <img src="Img-src\Lip Movement.gif" alt="MouthMap Logo">
+  <img src="https://raw.githubusercontent.com/d-kavinraja/MouthMap/main/Img-src/Lip%20Movement.gif" alt="MouthMap Lip Reading Animation" width="600"/>
+  <h1>MouthMap: Lip Reading with Deep Learning</h1>
+  <p><strong>Translating Silence into Sentences with AI 🤫➡️✍️</strong></p>
+  
+  <p>
+    <a href="https://www.python.org/downloads/release/python-380/"><img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python Version"></a>
+    <a href="https://www.tensorflow.org/"><img src="https://img.shields.io/badge/TensorFlow-2.x-orange.svg" alt="TensorFlow Version"></a>
+    <a href="https://github.com/yourusername/MouthMap/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+    <a href="https://github.com/yourusername/MouthMap/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="Pull Requests Welcome"></a>
+    <a href="https://www.kaggle.com/models/santhankarnala/40th-epoch-model-checkpoint/Keras/default/1"><img src="https://img.shields.io/badge/Kaggle%20Model-Available-blue" alt="Kaggle Model"></a>
+  </p>
 </div>
 
-## Exportred Model is Now Avaiable(Soon the HIGH Accuracy model will be Available : https://www.kaggle.com/models/santhankarnala/40th-epoch-model-checkpoint/Keras/default/1
-## Our app is available! The accuracy may not be perfect when uploading your own videos, but feel free to try it out and have fun. You can also select from the available sample videos to see the results.
-## Overview
+MouthMap is an advanced deep learning project that interprets lip movements from video and transcribes them into text. Using a sophisticated architecture of 3D Convolutional Neural Networks (CNNs) and Bidirectional LSTMs with a CTC loss function, MouthMap pushes the boundaries of silent speech recognition.
 
-MouthMap is a deep learning-based project designed to interpret lip movements from video data and generate corresponding text sentences. Leveraging convolutional neural networks (CNNs), bidirectional LSTMs, and Connectionist Temporal Classification (CTC) loss, this project processes video frames of lip movements to predict spoken phrases.
+---
 
-### 🎯 Key Applications
-- Silent speech recognition
-- Accessibility tools
-- Human-computer interaction
+## 🌟 Key Features
 
-## 🌟 Features
+-   🎥 **Video-to-Text Transcription**: Converts lip movements in videos directly into coherent text sentences.
+-   🧠 **State-of-the-Art Architecture**: Built on a powerful 3D CNN + Bi-LSTM model to capture complex spatio-temporal features.
+-   ⚙️ **End-to-End Pipeline**: Provides a complete workflow from video preprocessing and data loading to model training and inference.
+-   🚀 **Real-time Potential**: Engineered for efficiency, laying the groundwork for live transcription applications.
+-   🧩 **Modular & Customizable**: The code is well-structured, making it easy to adapt, extend, and experiment with.
 
-- **Video Preprocessing**: Converts video frames to grayscale and normalizes them for model input
-- **Lip Reading Model**: 
-  - Uses 3D CNN and Bidirectional LSTM architecture(Customized)
-  - Extracts spatial-temporal features from lip movements
-- **CTC Loss Implementation**: Sequence-to-sequence prediction without explicit alignment
-- **Efficient Data Pipeline**: Handles video and alignment data using TensorFlow's tf.data API
-- **Real-Time Predictions**: Outputs predicted sentences from lip movement videos
+---
 
-## 📦 Dataset
+## 📲 Live Demo & Exported Model
 
-### Download Link
-[Google Drive Dataset](https://drive.google.com/uc?id=1YlvpDLix3S-U8fd-gqRwPcWXAXm8JwjL)
+Our app is available to try! While accuracy with custom videos is still being improved, you can test its capabilities with the provided samples.
 
-### Structure
-- `data/s1/*.mpg`: Video files containing lip movements
-- `data/alignments/s1/*.align`: Text alignments for spoken phrases
+-   **Try the App**: `[Link to Your Deployed App]`
+-   **Download the Trained Model**: A pre-trained model checkpoint from the 40th epoch is available on Kaggle: [**Download from Kaggle Models**](https://www.kaggle.com/models/santhankarnala/40th-epoch-model-checkpoint/Keras/default/1)
 
-## 🚀 Installation
+---
 
-### Prerequisites
-- Python 3.8+
-- TensorFlow 2.x
-- OpenCV (cv2)
-- NumPy
-- Matplotlib
-- gdown (for dataset downloading)
+## 🏗️ Model Architecture
 
-### Setup Steps
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/MouthMap.git
-   cd MouthMap
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Download Dataset**
-   ```python
-   import gdown
-   url = 'https://drive.google.com/uc?id=1YlvpDLix3S-U8fd-gqRwPcWXAXm8JwjL'
-   output = 'data.zip'
-   gdown.download(url, output, quiet=False)
-   gdown.extractall('data.zip')
-   ```
-
-## 🏋️ Model Architecture
-
-### Components
-- **3D Convolutional Layers**
-  - Input Shape: (75, 46, 140, 1)
-  - 3 Conv3D layers with ReLU activation and MaxPooling3D
-- **Bidirectional LSTMs**
-  - Two layers with 128 units
-  - 50% dropout
-- **Dense Layer**
-  - Outputs probabilities over 41-character vocabulary
+MouthMap processes video frames by first extracting features through a series of 3D convolutional layers, which are ideal for capturing both spatial details (lip shape) and temporal changes (movement). The output is then passed to a Bidirectional LSTM network to understand the sequential context of the speech, and finally, a Dense layer predicts the text.
 
 ![Model Architecture](./Img-src/Model%20Architecture.png)
 
-## 🔬 Training Details
+| Layer Type                | Details                                           | Purpose                                            |
+| :------------------------ | :------------------------------------------------ | :------------------------------------------------- |
+| **Input Layer** | `(75, 46, 140, 1)`                                | 75 frames of 46x140 grayscale video.               |
+| **3x Conv3D + MaxPool3D** | Kernels: `(3,3,3)`, Filters: `128 -> 256 -> 75`    | Hierarchical feature extraction from video data.   |
+| **Reshape Layer** | Flattens spatial dimensions.                      | Prepares data for sequential processing by LSTMs.  |
+| **2x Bidirectional LSTM** | `128` units each, with `50%` Dropout.             | Captures temporal dependencies in speech patterns. |
+| **Dense Layer** | `41` units + `Softmax` activation.                | Outputs character probabilities for CTC decoding.  |
 
-- **Optimizer**: Adam (learning rate = 0.0001)
-- **Loss Function**: CTC Loss
-- **Batch Size**: 2
-- **Epochs**: 100
+---
 
-### Callbacks
-- ModelCheckpoint
-- LearningRateScheduler
-- ProduceExample
+## 🚀 Getting Started
 
-## 🧪 Inference Example
+Follow these steps to set up the project on your local machine.
+
+### Prerequisites
+
+-   Python 3.8+
+-   TensorFlow 2.x
+-   FFmpeg (for video processing, often handled by OpenCV but good to have)
+
+### Installation Steps
+
+1.  **Clone the Repository**
+    ```bash
+    git clone [https://github.com/yourusername/MouthMap.git](https://github.com/yourusername/MouthMap.git)
+    cd MouthMap
+    ```
+
+2.  **Create a Virtual Environment & Install Dependencies**
+    It's highly recommended to use a virtual environment.
+    ```bash
+    # Create and activate the virtual environment
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+    # Install the required packages
+    pip install -r requirements.txt
+    ```
+
+3.  **Download the Dataset**
+    Run the following Python script to download and extract the dataset.
+    ```python
+    import gdown
+    import os
+
+    # Create data directory if it doesn't exist
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Download and extract
+    url = '[https://drive.google.com/uc?id=1YlvpDLix3S-U8fd-gqRwPcWXAXm8JwjL](https://drive.google.com/uc?id=1YlvpDLix3S-U8fd-gqRwPcWXAXm8JwjL)'
+    output = 'data/data.zip'
+    gdown.download(url, output, quiet=False)
+    gdown.extractall(output, 'data/')
+    ```
+
+---
+
+## 🧪 Quick Inference Example
+
+Here’s how you can use the pre-trained model to transcribe a video. Make sure to download the model weights from the [Kaggle link](#-live-demo--exported-model) and place them in a `models` directory.
 
 ```python
-# Load trained model weights
-model.load_weights('./models/checkpoint.weights.h5')
-
-# Predict lip movements
-test_path = './data/s1/bbal6n.mpg'
-frames, alignments = load_data(tf.convert_to_tensor(test_path))
-yhat = model.predict(frames[tf.newaxis, ...])
-decoded = tf.keras.backend.ctc_decode(yhat, [75], greedy=False)[0][0].numpy()
-```
-
-### Example Output
-- **Original**: "bin blue at l six now"
-- **Prediction**: *(varies based on training)*
-
-## 🚧 Future Improvements
-- Enhance model accuracy with larger datasets
-- Add real-time video processing
-- Optimize for edge device deployment
-- Incorporate attention mechanisms
-
-## 🤝 Contributing
-
-Contributions are welcome! 
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push to branch
-5. Open a Pull Request
-
-
-## Using Exported Model
-```py
-import os
-import cv2
 import tensorflow as tf
 import numpy as np
 from typing import List
+# Note: You will need to import your project's custom functions
+# For example: from your_project_utils import load_video, num_to_char
+# And from your_project_model import build_model, CTCLoss
 
-def load_video(path: str) -> List[float]:
-    cap = cv2.VideoCapture(path)
-    frames = []
-    for _ in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = tf.image.rgb_to_grayscale(frame)
-        frames.append(frame[190:236, 80:220, :]) 
-    cap.release()
-    
-    mean = tf.math.reduce_mean(frames)
-    std = tf.math.reduce_std(tf.cast(frames, tf.float32))
-    frames = tf.cast((frames - mean), tf.float32) / std 
-    return frames
-
-def load_alignments(path: str) -> List[str]:
-    with open(path, 'r') as f:
-        lines = f.readlines()
-    tokens = []
-    for line in lines:
-        line = line.split()
-        if line[2] != 'sil':
-            tokens.extend([' ', line[2]])
-    return char_to_num(tf.reshape(tf.strings.unicode_split(tokens, input_encoding='UTF-8'), (-1)))[1:]
-
-def load_data(path: str):
-    path = bytes.decode(path.numpy())
-    file_name = path.split('/')[-1].split('.')[0]
-    video_path = os.path.join('data', 's1', f'{file_name}.mpg')
-    alignment_path = os.path.join('data', 'alignments', 's1', f'{file_name}.align')
-    frames = load_video(video_path)
-    alignments = load_alignments(alignment_path)
-    return frames, alignments
-
-vocab = [x for x in "abcdefghijklmnopqrstuvwxyz0123456789'?! "]
-char_to_num = tf.keras.layers.StringLookup(vocabulary=vocab, oov_token="")
-num_to_char = tf.keras.layers.StringLookup(vocabulary=char_to_num.get_vocabulary(), oov_token="", invert=True)
-
-def CTCLoss(y_true, y_pred):
-    batch_len = tf.cast(tf.shape(y_true)[0], dtype="int64")
-    input_length = tf.cast(tf.shape(y_pred)[1], dtype="int64")
-    label_length = tf.cast(tf.shape(y_true)[1], dtype="int64")
-    input_length = input_length * tf.ones(shape=(batch_len, 1), dtype="int64")
-    label_length = label_length * tf.ones(shape=(batch_len, 1), dtype="int64")
-    loss = tf.keras.backend.ctc_batch_cost(y_true, y_pred, input_length, label_length)
-    return loss
-
-def build_model():
-    input_shape = (75, 46, 140, 1)
-    inputs = tf.keras.layers.Input(shape=input_shape, name="input")
-    
-    x = tf.keras.layers.Conv3D(128, 3, activation=None, padding='same')(inputs)
-    x = tf.keras.layers.Activation('relu')(x)
-    x = tf.keras.layers.MaxPool3D(pool_size=(1, 2, 2))(x)
-    
-    x = tf.keras.layers.Conv3D(256, 3, activation=None, padding='same')(x)
-    x = tf.keras.layers.Activation('relu')(x)
-    x = tf.keras.layers.MaxPool3D(pool_size=(1, 2, 2))(x)
-    
-    x = tf.keras.layers.Conv3D(75, 3, activation=None, padding='same')(x)
-    x = tf.keras.layers.Activation('relu')(x)
-    x = tf.keras.layers.MaxPool3D(pool_size=(1, 2, 2))(x)
-    
-    x = tf.keras.layers.Reshape((75, -1))(x)
-    
-    x = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(128, return_sequences=True))(x)
-    x = tf.keras.layers.Dropout(0.5)(x)
-    x = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(128, return_sequences=True))(x)
-    x = tf.keras.layers.Dropout(0.5)(x)
-    
-    outputs = tf.keras.layers.Dense(len(char_to_num.get_vocabulary()), activation='softmax')(x)
-    
-    model = tf.keras.Model(inputs, outputs)
-    return model
-
-model = build_model()
-model.load_weights('/kaggle/input/40th-epoch-model-checkpoint/keras/default/1/checkpoint.weights.h5')
+# 1. Build the model and load weights
+# Ensure build_model() and CTCLoss are defined as in the original repository
+model = build_model() 
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001), loss=CTCLoss)
+model.load_weights('./models/checkpoint.weights.h5') # Update path to your downloaded weights
 
-test_data = tf.data.Dataset.list_files(['data/s1/*.mpg']).map(lambda x: tf.py_function(load_data, [x], [tf.float32, tf.int64]))
-test_data = test_data.padded_batch(2, padded_shapes=([75, None, None, 1], [None]))
+# 2. Load and preprocess a sample video
+# Ensure load_video() is defined as in the original repository
+video_path = './data/s1/bbal6n.mpg' 
+frames = load_video(video_path)
+video_tensor = tf.expand_dims(frames, axis=0) # Add batch dimension
 
-videos = []
-alignments = []
-count = 0
-for batch in test_data.take(3):
-    batch_videos, batch_alignments = batch
-    for i in range(len(batch_videos)):
-        if count < 5: 
-            videos.append(batch_videos[i:i+1]) 
-            alignments.append(batch_alignments[i])
-            count += 1
-        else:
-            break
-    if count >= 5:
-        break
+# 3. Predict the sequence of character probabilities
+yhat = model.predict(video_tensor)
 
-for i in range(5):
-    print(f"\nProcessing Video {i+1}:")
-    video_input = videos[i]
-    alignment = alignments[i]
+# 4. Decode the output to get the final text
+# Ensure num_to_char is defined (from the StringLookup layer)
+decoded = tf.keras.backend.ctc_decode(yhat, input_length=[75], greedy=True)[0][0].numpy()
+predicted_text = tf.strings.reduce_join(num_to_char(decoded)).numpy().decode('utf-8')
 
-    yhat = model.predict(video_input)
-
-
-    decoded = tf.keras.backend.ctc_decode(yhat, input_length=[75], greedy=True)[0][0].numpy()
-    predicted_text = tf.strings.reduce_join(num_to_char(decoded)).numpy().decode('utf-8')
-
-
-    actual_text = tf.strings.reduce_join(num_to_char(alignment)).numpy().decode('utf-8')
-
-    print("Actual:", actual_text)
-    print("Predicted:", predicted_text)
-    print("-" * 50)
-```
-
-
-## 🙏 Acknowledgments
-- Built with TensorFlow
-- Inspired by lip-reading research
-
----
+print(f"✅ Predicted Text: {predicted_text}")
+# Example Output -> Original: "bin blue at l six now"
