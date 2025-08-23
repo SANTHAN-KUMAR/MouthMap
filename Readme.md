@@ -30,7 +30,7 @@ MouthMap is an advanced deep learning project that interprets lip movements from
 
 Our app is available to try! While accuracy with custom videos is still being improved, you can test its capabilities with the provided samples.
 
--   **Try the App**: `[Link to Your Deployed App]`
+-   **Try the App**: `https://mouthmap.streamlit.app/`
 -   **Download the Trained Model**: A pre-trained model checkpoint from the 40th epoch is available on Kaggle: [**Download from Kaggle Models**](https://www.kaggle.com/models/santhankarnala/40th-epoch-model-checkpoint/Keras/default/1)
 
 ---
