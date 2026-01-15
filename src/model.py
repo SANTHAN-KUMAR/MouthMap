@@ -1,15 +1,17 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential 
-from tensorflow.keras.layers import Conv3D, LSTM, Dense, Dropout, Bidirectional, MaxPool3D, Activation, Reshape, TimeDistributed, Flatten
+from tensorflow.keras.layers import Conv3D, LSTM, Dense, Dropout, Bidirectional, MaxPool3D, Activation, TimeDistributed, Flatten
 from .utils import get_vocab_lookups
 
 def build_model(input_shape=(75, 46, 140, 1)):
     """
     Builds the LipNet architecture:
-    3D CNN -> Reshape -> Bi-LSTM -> Dense(Softmax)
+    3D CNN -> TimeDistributed Flatten -> Bi-LSTM -> Dense(Softmax)
+    
+    This matches the architecture used to train the 46-epoch checkpoint.
     """
     char_to_num, _ = get_vocab_lookups()
-    vocab_size = char_to_num.vocabulary_size() + 1 # +1 for CTC blank/oov? Notebook used size+1
+    vocab_size = char_to_num.vocabulary_size() + 1  # +1 for CTC blank
     
     model = Sequential()
     
@@ -28,10 +30,7 @@ def build_model(input_shape=(75, 46, 140, 1)):
     model.add(Activation('relu'))
     model.add(MaxPool3D((1,2,2)))
     
-    # Reshape
-    # 46 / 2 / 2 / 2 ~ 5.75 -> 5? Notebook output says (None, 75, 5, 17, 75)
-    # 140 / 2 / 2 / 2 ~ 17.5 -> 17
-    # 5 * 17 * 75 = 6375 features per timestep
+    # TimeDistributed Flatten
     model.add(TimeDistributed(Flatten()))
     
     # Bi-LSTMs
